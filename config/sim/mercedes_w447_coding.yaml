@@ -2,7 +2,7 @@
 # Format: UDS request (hex string) → UDS response (hex string)
 # Used by sim mode to emulate ECU communication without hardware.
 
-vehicle: "mercedes_w447_v250"
+vehicle: "mercedes_vklasse_w447"
 
 # Standard DIDs supported by most Mercedes ECUs
 standard_dids:

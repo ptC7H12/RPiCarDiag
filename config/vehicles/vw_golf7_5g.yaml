@@ -1,9 +1,18 @@
 vehicle:
-  name: "VW Golf Mk7"
+  name: "VW Golf 7 (5G)"
   protocol: "can"
+  manufacturer: "vw"
+  platform: "5G"
   year_from: 2013
   year_to: 2020
-  description: "VW Golf 7 (5G) custom CAN signals. Extend as needed."
+  description: "VW Golf 7 (5G/AU) MQB-Plattform. CAN-Signale und Coding-Parameter."
+  identification:
+    vin_pattern:
+      - "^WVWZZZ5GZ.*"      # Golf 7 (Deutschland)
+      - "^3VW.*5G.*"        # Golf 7 (USA / Mexiko)
+      - "^WVGZZZ5GZ.*"      # Golf Sportsvan (AM)
+    wmi_codes: ["WVW", "3VW", "WVG"]
+    model_code: "5G"
 
 ecus:
   - name: "Motorsteuergerät"

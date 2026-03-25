@@ -3,10 +3,20 @@
 Vehicle-specific data (CAN IDs, signal definitions, ECU addresses, coding options)
 is defined in YAML files under `config/vehicles/`.
 
+## File naming convention
+
+Config files follow the pattern `{hersteller}_{modell}_{plattform}.yaml`:
+
+| Datei | Fahrzeug |
+|-------|----------|
+| `generic_obd2_fallback.yaml` | Universeller Fallback (Standard OBD-II PIDs) |
+| `vw_golf7_5g.yaml` | VW Golf 7, Plattform 5G (MQB) |
+| `mercedes_vklasse_w447.yaml` | Mercedes V-Klasse / Vito, Plattform W447 |
+
 ## Creating a new vehicle config
 
 ```bash
-cp config/vehicles/generic_obd2.yaml config/vehicles/my_car.yaml
+cp config/vehicles/generic_obd2_fallback.yaml config/vehicles/my_car.yaml
 # Edit my_car.yaml with your vehicle's specifics
 python -m rpicardiag validate-config config/vehicles/my_car.yaml
 ```
@@ -53,6 +63,42 @@ coding:                    # Optional: variant coding entries
       0: "disabled"
       1: "enabled"
 ```
+
+## Automatic vehicle detection (VIN matching)
+
+RPiCarDiag can automatically detect the connected vehicle by reading the VIN and matching it against all configs. Add an `identification` block to your vehicle config:
+
+```yaml
+vehicle:
+  name: "Mercedes V-Klasse (W447)"
+  identification:
+    vin_pattern:
+      - "^WDF447.*"          # V-Klasse (DE production)
+      - "^VSA447.*"          # Vito (ES production)
+    wmi_codes: ["WDF", "VSA"]  # World Manufacturer Identifier (VIN pos 1-3)
+    model_code: "447"          # Model code (VIN pos 4-6)
+    ecu_fingerprints:          # Optional: secondary matching via ECU DIDs
+      - did: "0xF197"          # System Name DID
+        pattern: "^OM651.*"    # Regex match against DID value
+```
+
+### How VIN matching works
+
+1. On connection, RPiCarDiag reads the VIN via OBD2 (Mode 09, PID 0x02) or UDS (DID 0xF190)
+2. All configs in `config/vehicles/` are scanned for `identification.vin_pattern`
+3. VIN is matched against each pattern (regex)
+4. Best match is auto-loaded; if no match, falls back to `generic_obd2_fallback`
+
+### VIN structure (ISO 3779)
+
+| Position | Content | Example |
+|----------|---------|---------|
+| 1–3 | WMI (World Manufacturer Identifier) | `WDF` = Mercedes-Benz Vans |
+| 4 | Vehicle type | `4` = Vito/V-Klasse |
+| 5–6 | Model series | `47` = W447 |
+| 10 | Model year | `F`=2015, `G`=2016, `H`=2017 |
+
+Configs **without** an `identification` block serve as fallback (lowest priority).
 
 ## CAN Topology (multi-bus vehicles)
 

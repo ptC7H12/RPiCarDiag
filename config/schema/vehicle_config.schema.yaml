@@ -23,6 +23,35 @@ properties:
         type: string          # e.g. "mercedes", "vw", "bmw"
       platform:
         type: string          # e.g. "W447", "MQB", "B48"
+      identification:
+        type: object
+        description: "VIN and ECU fingerprint matching rules for auto-detection"
+        additionalProperties: false
+        properties:
+          vin_pattern:
+            type: array
+            description: "Regex patterns to match against 17-char VIN"
+            items:
+              type: string    # e.g. "^WDF447.*" for Mercedes W447
+          wmi_codes:
+            type: array
+            description: "World Manufacturer Identifier codes (VIN pos 1-3)"
+            items:
+              type: string    # e.g. "WDF" = Mercedes-Benz Vans
+          model_code:
+            type: string      # VIN pos 4-6, e.g. "447"
+          ecu_fingerprints:
+            type: array
+            description: "ECU DID values for secondary identification"
+            items:
+              type: object
+              additionalProperties: false
+              required: [did, pattern]
+              properties:
+                did:
+                  type: string    # UDS DID hex, e.g. "0xF197"
+                pattern:
+                  type: string    # regex, e.g. "^OM651.*"
 
   can_topology:
     type: object

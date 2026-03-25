@@ -3,7 +3,7 @@
 # Reference: docs/mercedes_w447_uds_reference.md
 
 vehicle:
-  name: "Mercedes V250 (W447)"
+  name: "Mercedes V-Klasse / Vito (W447)"
   protocol: "uds"
   manufacturer: "mercedes"
   platform: "W447"
@@ -13,6 +13,16 @@ vehicle:
     Mercedes W447 V-Klasse / Vito pre-facelift. Drei CAN-Netzwerke über
     Central Gateway (CGW im SAM Front). Proprietäre CAN-IDs (~0x0300-0x06xx),
     nicht Standard-UDS (0x7DF-0x7E7). OBD-Port nur auf CAN D.
+  identification:
+    vin_pattern:
+      - "^WDF447.*"          # V-Klasse / Vito (Deutschland)
+      - "^VSA447.*"          # Vito (Spanien, Vitoria-Gasteiz)
+      - "^WDF63.*447.*"      # V-Klasse Langversion
+    wmi_codes: ["WDF", "VSA"]
+    model_code: "447"
+    ecu_fingerprints:
+      - did: "0xF197"
+        pattern: "^OM651.*"  # OM651 Diesel (2.1L CDI)
 
 can_topology:
   gateway: "SAM Front (CGW)"
