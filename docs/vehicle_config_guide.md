@@ -187,6 +187,50 @@ UDS coding flow: Extended Session (`10 03`) → Security Access (`27 XX`) → Re
 
 See `docs/mercedes_w447_uds_reference.md` for a complete Mercedes W447 example.
 
+## UDS DID-based signals
+
+For UDS-capable vehicles, signals can be read via UDS Service 0x22 (ReadDataByIdentifier) instead of passive CAN bus monitoring. Add `source: uds_did` to the signal definition:
+
+```yaml
+signals:
+  - id: "dpf_fuellstand"
+    name: "DPF Füllstand"
+    category: "DPF"
+    source: "uds_did"          # Signal comes from UDS DID read
+    did: "0x0444"              # UDS Data Identifier
+    ecu: "Motorsteuergerät (CRD3)"  # Target ECU from ecus list
+    length: 16                 # Bits in response payload
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.142857           # physical = raw * factor + offset
+    offset: 0
+    unit: "%"
+    min: 0
+    max: 300
+    formula_note: "raw / 7 = Prozent"
+```
+
+### Common formula patterns
+
+| Pattern | factor | offset | Example |
+|---------|--------|--------|---------|
+| Zehntel-Kelvin → °C | 0.1 | -273.1 | Exhaust gas temperatures |
+| Raw × constant | constant | 0 | Pressure values (mbar, bar) |
+| Raw / divisor | 1/divisor | 0 | DPF fill level (raw / 7) |
+| Raw - constant | 1 | -constant | OBD2 temperatures (raw - 40) |
+
+All UDS DID formulas in this project use the standard linear model `physical = raw * factor + offset`. The `formula_note` field provides a human-readable explanation.
+
+### Signal source types
+
+| Source | Description | Session |
+|--------|-------------|---------|
+| `can` (default) | Passive CAN bus monitoring | None needed |
+| `uds_did` | Active UDS DID read (Service 0x22) | Default or Extended |
+| `obd2_pid` | Standard OBD2 PID (Mode 01) | None needed |
+
+See `docs/mercedes_w447_dpf_reference.md` for a complete example with ~20 UDS DID signals.
+
 ## Finding CAN IDs for your vehicle
 
 1. Use the CAN Bus Sniffer (US-001) to observe raw traffic

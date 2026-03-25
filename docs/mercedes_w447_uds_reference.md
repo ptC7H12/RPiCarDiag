@@ -229,6 +229,14 @@ CBF-Dateien (proprietäre Daimler-Binärdateien) definieren die vollständige Zu
 
 ---
 
+## Weiterführende Dokumentation
+
+- **DPF-Monitoring:** `docs/mercedes_w447_dpf_reference.md` — Verifizierte DIDs für DPF-Füllstand, Abgastemperaturen, Regenerations-Erkennung
+- **OBD2-Codes:** `docs/obd2_dtc_pid_reference.md` — Externe DTC/PID-Quellen (pyOBD, python-obd, SAE)
+- **Vehicle Config:** `docs/vehicle_config_guide.md` — Anleitung für UDS-DID-Signale in YAML
+
+---
+
 ## Quellen
 
 | Quelle | Beschreibung |
