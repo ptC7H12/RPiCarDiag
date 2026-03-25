@@ -1,4 +1,4 @@
-active_vehicle: "generic_obd2"
+active_vehicle: "generic_obd2_fallback"
 theme: "dark"
 font_size: "M"
 language: "de"

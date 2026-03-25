@@ -58,6 +58,51 @@ adapter:
   port: /dev/rfcomm0
 ```
 
+## Mercedes W447 — Besonderheiten
+
+### CAN-Bus-Topologie
+
+Der W447 nutzt drei separate CAN-Netzwerke, verbunden über ein Central Gateway (CGW) im SAM Front:
+
+| CAN Bus | Geschwindigkeit | Funktion |
+|---------|----------------|----------|
+| CAN C | 500 kbps | Antrieb, Bremsen, Lenkung |
+| CAN B | 250 kbps | Karosserie, Display, Beleuchtung |
+| CAN D | 500 kbps | Diagnose (OBD-Port) |
+
+**Wichtig:** Der OBD-Port verbindet nur mit CAN D. Das CGW routet Diagnoseanfragen zum internen CAN-Bus. Lesen aller CAN-Frames ist möglich, Schreiben nur von Diagnose-CAN-IDs.
+
+### MCP2515 Konfiguration für W447
+
+```
+# /boot/config.txt — 16 MHz Oszillator für PiCAN 2:
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=16000000,interrupt=25
+```
+
+```bash
+# CAN-Interface für W447 CAN D (500 kbps):
+sudo ip link set can0 type can bitrate 500000
+sudo ip link set can0 up
+```
+
+### Verbindung testen
+
+```bash
+# CAN-Traffic mitlesen:
+candump can0
+
+# Diagnose-Request senden (Tester Present):
+cansend can0 0639#3E00
+
+# Alle Frames eines ECUs filtern (z.B. IC Response-ID 0x0641):
+candump can0,0641:07FF
+```
+
+### UDS über ISO-TP
+
+Für UDS-Kommunikation wird ISO-TP (ISO 15765-2) als Transport Layer benötigt. Die Python-Libraries `udsoncan` und `can-isotp` übernehmen dies automatisch. Details und Code-Beispiele: siehe `docs/mercedes_w447_uds_reference.md`.
+
 ## Touchscreen Calibration (7" DSI)
 
 For official Raspberry Pi 7" display no extra config is needed.
