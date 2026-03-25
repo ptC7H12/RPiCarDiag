@@ -1,0 +1,459 @@
+# Mercedes W447 V250 (2015 pre-facelift)
+# UDS-over-CAN via Central Gateway, variant coding via CBF database files
+# Reference: docs/mercedes_w447_uds_reference.md
+
+vehicle:
+  name: "Mercedes V250 (W447)"
+  protocol: "uds"
+  manufacturer: "mercedes"
+  platform: "W447"
+  year_from: 2015
+  year_to: 2020
+  description: >
+    Mercedes W447 V-Klasse / Vito pre-facelift. Drei CAN-Netzwerke über
+    Central Gateway (CGW im SAM Front). Proprietäre CAN-IDs (~0x0300-0x06xx),
+    nicht Standard-UDS (0x7DF-0x7E7). OBD-Port nur auf CAN D.
+
+can_topology:
+  gateway: "SAM Front (CGW)"
+  obd_port_bus: "CAN_D"
+  buses:
+    - name: "CAN_C"
+      bitrate: 500000
+      description: "Engine/Chassis — Antrieb, Bremsen, Lenkung"
+    - name: "CAN_B"
+      bitrate: 250000
+      description: "Interior/Body — Karosserie, Display, Beleuchtung"
+    - name: "CAN_D"
+      bitrate: 500000
+      description: "Diagnostic — OBD-Port zum CGW, nur Diagnose-CAN-IDs schreibbar"
+
+ecus:
+  # --- Instrument Cluster ---
+  - name: "Kombiinstrument (IC)"
+    address: "0x0641"
+    response_address: "0x0649"
+    tx_id: "0x0639"
+    rx_id: "0x0641"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "IC447KIG1"
+    description: "Continental NEC V850 — Tacho, Display, Warnungen. Teilt IC222-Plattform mit W205."
+    security_access:
+      coding_level: 0x0B
+      coding_level_response: 0x0C
+      standard_level: 0x01
+      seed_key_method: "mbseedkey"
+
+  # --- SAM Front / Central Body Computer ---
+  - name: "SAM Front (CBC447)"
+    address: "0x0714"
+    response_address: "0x071C"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "CBC447"
+    description: "Central Body Computer — Beleuchtung, Wischer, Verriegelung, Gateway-Funktion"
+    security_access:
+      coding_level: 0x0B
+      coding_level_response: 0x0C
+      standard_level: 0x01
+      seed_key_method: "mbseedkey"
+
+  # --- SAM Rear ---
+  - name: "SAM Hinten"
+    address: "0x0720"
+    response_address: "0x0728"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "SAMR_212"
+    description: "Heckbeleuchtung, Sensoren hinten"
+    security_access:
+      coding_level: 0x0B
+      coding_level_response: 0x0C
+      seed_key_method: "mbseedkey"
+
+  # --- Engine ECU (Diesel OM651) ---
+  - name: "Motorsteuergerät (CRD3)"
+    address: "0x07E0"
+    response_address: "0x07E8"
+    can_bus: "CAN_C"
+    protocol: "uds"
+    cbf_file: "CRD3"
+    description: "Bosch EDC17C66 — OM651 Diesel. Auch CRD3S2/CRD3MFA1 möglich."
+    security_access:
+      coding_level: 0x0B
+      coding_level_response: 0x0C
+      standard_level: 0x01
+      seed_key_method: "mbseedkey"
+
+  # --- Transmission ---
+  - name: "Getriebesteuergerät (VGS4NAG2)"
+    address: "0x07E1"
+    response_address: "0x07E9"
+    can_bus: "CAN_C"
+    protocol: "kwp2000"
+    cbf_file: "VGS4NAG2"
+    description: "7G-TRONIC Automatikgetriebe — nutzt KW2C3PE statt UDS"
+
+  # --- ESP/ABS ---
+  - name: "ESP/ABS"
+    address: "0x0713"
+    response_address: "0x077D"
+    can_bus: "CAN_C"
+    protocol: "uds"
+    cbf_file: "ESP9LEI"
+    description: "ABS, ESP, Traktionskontrolle"
+    security_access:
+      coding_level: 0x0B
+      coding_level_response: 0x0C
+      seed_key_method: "mbseedkey"
+
+  # --- Airbag ---
+  - name: "Airbag (ORC)"
+    address: "0x0710"
+    response_address: "0x0718"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "ORC166"
+    description: "Airbag, Gurtüberwachung"
+    security_access:
+      coding_level: 0x0B
+      coding_level_response: 0x0C
+      seed_key_method: "mbseedkey"
+
+  # --- EIS (Electronic Ignition Switch) ---
+  - name: "EIS (Zündschloss)"
+    address: "0x0642"
+    response_address: "0x064A"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "EIS447"
+    description: "Wegfahrsperre, Schlüssel, Gateway CAN B↔C"
+
+  # --- Head Unit ---
+  - name: "COMAND NTG5 (HU5)"
+    address: "0x0740"
+    response_address: "0x0748"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "HU5"
+    description: "COMAND NTG5 / Basis-Audio"
+
+  # --- HVAC ---
+  - name: "Klimaanlage (HVAC)"
+    address: "0x0750"
+    response_address: "0x0758"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "HVAC447"
+    description: "Klimasteuerung"
+
+  # --- TPMS ---
+  - name: "Reifendruckkontrolle (TPM)"
+    address: "0x0760"
+    response_address: "0x0768"
+    can_bus: "CAN_B"
+    protocol: "uds"
+    cbf_file: "TPM3V1"
+    description: "TPMS-Modul"
+
+  # --- High-Speed Gateway ---
+  - name: "Gateway (HGW)"
+    address: "0x0300"
+    response_address: "0x0308"
+    can_bus: "CAN_D"
+    protocol: "uds"
+    cbf_file: "HGW447"
+    description: "High-Speed Gateway — verbindet CAN C und CAN D"
+
+signals:
+  # CAN C — Motor/Chassis (CAN-IDs aus W447-Community-Daten, nicht vollständig verifiziert)
+  - id: "0x0280"
+    name: "Motordrehzahl"
+    category: "Motor"
+    description: "Motordrehzahl (CAN C)"
+    can_bus: "CAN_C"
+    start_bit: 16
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.25
+    offset: 0
+    unit: "rpm"
+    min: 0
+    max: 6500
+
+  - id: "0x0288"
+    name: "Fahrpedalstellung"
+    category: "Motor"
+    description: "Fahrpedal-Position in Prozent"
+    can_bus: "CAN_C"
+    start_bit: 8
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.392
+    offset: 0
+    unit: "%"
+    min: 0
+    max: 100
+
+  - id: "0x05A0"
+    name: "Fahrzeuggeschwindigkeit"
+    category: "Fahrwerk"
+    description: "Geschwindigkeit aus ABS/ESP"
+    can_bus: "CAN_C"
+    start_bit: 0
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.01
+    offset: 0
+    unit: "km/h"
+    min: 0
+    max: 250
+
+  - id: "0x03C0"
+    name: "Kühlmitteltemperatur"
+    category: "Motor"
+    description: "Motorkühlmitteltemperatur"
+    can_bus: "CAN_C"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.75
+    offset: -48
+    unit: "°C"
+    min: -48
+    max: 142
+
+# ============================================================================
+# VARIANT CODING
+# ============================================================================
+# Kodierungsparameter nach CBF-Dateien und Community-Verifikation.
+# DID-basierte UDS-Kodierung: Read (0x22) → Modify Bits → Write (0x2E).
+# Schreib-Payload: [coding_bytes] + [4-Byte Fingerprint] + [opt. 16-Byte SCN]
+# Factory-Fingerprint: 00 40 33 10 — Vediamo schreibt: 00 00 01 00
+# ============================================================================
+
+coding:
+  # ----- Kombiinstrument (IC447KIG1) -----
+
+  - id: "restreichweite"
+    name: "Restreichweite (Reichweitenanzeige)"
+    ecu: "Kombiinstrument (IC)"
+    description: >
+      Aktiviert die Restreichweite-Anzeige im Bordcomputer.
+      BESTÄTIGT: DID 0x0108, Bit 1 (Maske 0x02). Byte 0x30 → 0x32.
+    coding_group: "VCD_Variantencodierung"
+    did: "0x0108"
+    byte_offset: 0
+    bit_offset: 1
+    bit_mask: "0x02"
+    bit_length: 1
+    data_type: "bit"
+    security_level: 0
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "deaktiviert"
+      1: "aktiviert"
+    notes: "Kein Security Access nötig. Zündung nach Schreiben aus/ein."
+
+  - id: "zeigerwischen"
+    name: "Zeigerwischen (Needle Sweep)"
+    ecu: "Kombiinstrument (IC)"
+    description: "Zeiger-Sweep-Animation beim Start (alle Nadeln schwingen einmal voll aus)."
+    coding_group: "VCD_Variantencodierung"
+    did: "0x0108"
+    data_type: "bit"
+    security_level: 0x01
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "Nicht_Vorhanden"
+      1: "Vorhanden"
+    notes: "Exakte Bit-Position aus CBF IC447KIG1 extrahieren (CaesarSuite Trafo)."
+
+  - id: "reifendruck_einheit"
+    name: "Reifendruck-Einheit"
+    ecu: "Kombiinstrument (IC)"
+    description: "Einheit der Reifendruckanzeige im Display."
+    coding_group: "VCD_Aktuelle_Menueeinstellungen"
+    did: "0x0108"
+    data_type: "enum"
+    security_level: 0x01
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "bar"
+      1: "PSI"
+      2: "kPa"
+    notes: "Exakte Byte/Bit-Position aus CBF IC447KIG1 extrahieren."
+
+  - id: "gurtwarner"
+    name: "Gurtwarner-Modus"
+    ecu: "Kombiinstrument (IC)"
+    description: >
+      Art der Sicherheitsgurt-Warnung. Alternativ in ORC166 (Airbag-ECU)
+      kodierbar, falls IC447KIG1 diesen Parameter nicht enthält.
+    coding_group: "VCD_Aktuelle_Menueeinstellungen"
+    did: "0x0108"
+    data_type: "enum"
+    security_level: 0x01
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "aus"
+      1: "Euro-NCAP (optisch + akustisch 91s)"
+      2: "USA alt (6s)"
+      4: "Euro-NCAP inkl. Beifahrer"
+      5: "USA alt inkl. Beifahrer"
+    notes: >
+      Falls Parameter in IC447KIG1 nicht existiert, im ORC166
+      (Airbag-ECU) kodieren. IC ist nur Display-Slave.
+
+  - id: "amg_menu"
+    name: "AMG-Menü"
+    ecu: "Kombiinstrument (IC)"
+    description: >
+      AMG-Sportmenü im Kombiinstrument. KOMPLEX: Erfordert Security Access
+      Level 09, ggf. Firmware-Flash und EEPROM-Modifikation.
+    coding_group: "VCD_06_Menueaktivierung"
+    data_type: "byte"
+    security_level: 0x09
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "Standard"
+      1: "AMG aktiv"
+    notes: >
+      WARNUNG: Security Level 0x09/0x0A (EEPROM). Kein freier Seed-Key-Generator
+      für IC222/IC447. Benötigt kostenpflichtiges Tool (MBTools, SimpleDiag, FVDI).
+      Möglicher 7-Stunden Firmware-Flash via DTS Monaco. Nur für Experten.
+
+  # ----- SAM Front (CBC447 / CB447) -----
+
+  - id: "tippblinken_anzahl"
+    name: "Tippblinken (Anzahl Impulse)"
+    ecu: "SAM Front (CBC447)"
+    description: >
+      Anzahl der Blinkimpulse bei kurzem Tippen des Blinkerhebels.
+      BESTÄTIGT: Community-verifiziert mit CB447 V-Klasse — Longstring
+      Byte-Wert 0x03 → 0x05 für 5 statt 3 Impulse.
+    coding_group: "VCD_Parameter_Fahrtrichtungsanzeiger"
+    data_type: "integer"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      3: "3 Impulse (Standard)"
+      4: "4 Impulse"
+      5: "5 Impulse"
+    notes: "Direkter Integer-Byte-Wert im Coding-Longstring. Nach Schreiben DL_EEPROM_Schreiben + FN_HardReset."
+
+  - id: "tfl_skandinavien"
+    name: "Tagfahrlicht Skandinavien-Modus"
+    ecu: "SAM Front (CBC447)"
+    description: "Standlicht wird zusammen mit Tagfahrlicht aktiviert."
+    coding_group: "VCD_Parameter_Tagfahrlicht"
+    data_type: "bit"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "nicht_aktiv"
+      1: "aktiv"
+    notes: "Parameter PLSM_STL_mit_TFL. Nach Schreiben DL_EEPROM_Schreiben + FN_HardReset."
+
+  - id: "auffindbeleuchtung_abblendlicht"
+    name: "Auffindbeleuchtung mit Abblendlicht"
+    ecu: "SAM Front (CBC447)"
+    description: "Bei Entriegelung/Auffindbeleuchtung schaltet auch das Abblendlicht ein."
+    coding_group: "VCD_Parameter_Auffindbeleuchtung"
+    data_type: "bit"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "nicht_aktiv"
+      1: "aktiv"
+
+  - id: "innenraumlicht_tueroeffnung"
+    name: "Innenraumlicht bei Türöffnung"
+    ecu: "SAM Front (CBC447)"
+    description: "Innenraumbeleuchtung beim Türöffnen ein-/ausschalten."
+    coding_group: "VCD_Parameter_Auffindbeleuchtung"
+    data_type: "bit"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "nicht_aktiv"
+      1: "aktiv (Standard)"
+
+  - id: "orientierungslicht_dauer"
+    name: "Orientierungslicht Nachlaufzeit"
+    ecu: "SAM Front (CBC447)"
+    description: "Dauer des Orientierungslichts nach Verriegelung."
+    coding_group: "VCD_Parameter_Auffindbeleuchtung"
+    data_type: "enum"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      10: "10 Sekunden"
+      20: "20 Sekunden"
+      30: "30 Sekunden"
+      60: "60 Sekunden"
+
+  - id: "verriegelung_blinkimpulse"
+    name: "Verriegelungsquittierung Blinkimpulse"
+    ecu: "SAM Front (CBC447)"
+    description: "Anzahl der Blinkimpulse bei Ver-/Entriegelung."
+    coding_group: "VCD_Parameter_Verriegelungsquittierung"
+    data_type: "integer"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      1: "1 Impuls (Standard)"
+      2: "2 Impulse"
+      3: "3 Impulse"
+
+  # ----- CGW / Gateway -----
+
+  - id: "eco_startstop_cgw"
+    name: "ECO Start/Stop (via CGW)"
+    ecu: "Gateway (HGW)"
+    description: >
+      Start/Stop-System komplett deaktivieren über CGW-Kodierung.
+      Zuverlässigste Methode — keine Warnleuchten.
+    coding_group: "VCD_Variantencodierung"
+    data_type: "enum"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "nicht_verfügbar (deaktiviert)"
+      1: "verfügbar (Standard)"
+    notes: "Community-bestätigt als zuverlässigste Methode. Keine Warnlampen."
+
+  # ----- Motor (CRD3 — OM651 Diesel) -----
+
+  - id: "startstop_lastmode"
+    name: "Start/Stop Last-Mode"
+    ecu: "Motorsteuergerät (CRD3)"
+    description: >
+      Start/Stop merkt sich letzten Button-Status. Wenn per Taste deaktiviert,
+      bleibt es nach Neustart deaktiviert.
+    coding_group: "VCD_Implizite_Variantenkodierung"
+    data_type: "enum"
+    security_level: 0x0B
+    session_type: 0x03
+    requires_reset: true
+    values:
+      0: "Standard-Logik"
+      1: "Last Mode (merkt letzten Status)"
+    notes: "Parameter 'Stopp-Start Standard Logik'. CRD3 mit Pre-2014 FW unterstützt ggf. kein Last Mode."

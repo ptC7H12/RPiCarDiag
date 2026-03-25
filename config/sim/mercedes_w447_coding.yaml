@@ -1,0 +1,88 @@
+# Simulated UDS responses for Mercedes W447 development/testing
+# Format: UDS request (hex string) → UDS response (hex string)
+# Used by sim mode to emulate ECU communication without hardware.
+
+vehicle: "mercedes_w447_v250"
+
+# Standard DIDs supported by most Mercedes ECUs
+standard_dids:
+  "22 F1 00": "62 F1 00 01 23"             # Active diagnostic variant ID
+  "22 F1 51": "62 F1 51 30 31 2E 30 35"    # Software version "01.05"
+  "22 F1 90": "62 F1 90 57 44 43 35 34 37 36 34 30 31 46 31 32 33 34 35 36"  # VIN: WDC5476401F123456
+
+ecu_responses:
+  # --- Kombiinstrument (IC447KIG1) ---
+  "Kombiinstrument (IC)":
+    # DiagnosticSessionControl → Extended Session
+    "10 03": "50 03 00 14 00 C8"
+    # SecurityAccess Seed Request (Level 01)
+    "27 01": "67 01 A3 B7 C2 D1"
+    # Restreichweite — DID 0x0108: Byte 0 = 0x30 (Bit 1 = 0 → deaktiviert)
+    "22 01 08": "62 01 08 30 00"
+    # VIN
+    "22 F1 90": "62 F1 90 57 44 43 35 34 37 36 34 30 31 46 31 32 33 34 35 36"
+    # ECU Reset
+    "11 01": "51 01"
+    # Tester Present
+    "3E 00": "7E 00"
+
+  # --- SAM Front (CBC447) ---
+  "SAM Front (CBC447)":
+    "10 03": "50 03 00 14 00 C8"
+    "27 0B": "67 0B E4 F5 12 A8"
+    # Tippblinken Longstring — enthält 0x03 = 3 Impulse
+    "22 02 00": "62 02 00 01 03 00 01 00 01 0A 01"
+    "11 01": "51 01"
+    "3E 00": "7E 00"
+
+  # --- Motorsteuergerät (CRD3) ---
+  "Motorsteuergerät (CRD3)":
+    "10 03": "50 03 00 14 00 C8"
+    "27 0B": "67 0B 7C 8D 9E AF"
+    "22 F1 90": "62 F1 90 57 44 43 35 34 37 36 34 30 31 46 31 32 33 34 35 36"
+    "11 01": "51 01"
+    "3E 00": "7E 00"
+
+  # --- Gateway (HGW447) ---
+  "Gateway (HGW)":
+    "10 03": "50 03 00 14 00 C8"
+    "27 0B": "67 0B 11 22 33 44"
+    "11 01": "51 01"
+    "3E 00": "7E 00"
+
+  # --- Airbag (ORC166) ---
+  "Airbag (ORC)":
+    "10 03": "50 03 00 14 00 C8"
+    "27 0B": "67 0B 55 66 77 88"
+    "11 01": "51 01"
+    "3E 00": "7E 00"
+
+# Simulated error responses
+error_responses:
+  # Security Access: invalid key
+  security_invalid_key: "7F 27 35"
+  # Security Access: exceeded attempts
+  security_exceeded: "7F 27 36"
+  # Service not supported
+  service_not_supported: "7F 22 11"
+  # Conditions not correct (e.g. engine running)
+  conditions_not_correct: "7F 2E 22"
+
+# Simulated Mercedes-typical DTCs
+dtcs:
+  - code: "P0299"
+    description: "Ladedruckregelung — Ladedruck zu niedrig"
+    status: "stored"
+    ecu: "Motorsteuergerät (CRD3)"
+  - code: "P2002"
+    description: "Partikelfilter — Wirkungsgrad unter Schwellwert"
+    status: "active"
+    ecu: "Motorsteuergerät (CRD3)"
+  - code: "U0100"
+    description: "Keine Kommunikation mit Motor-ECU"
+    status: "stored"
+    ecu: "SAM Front (CBC447)"
+  - code: "B1056"
+    description: "Kombiinstrument — interner Fehler"
+    status: "stored"
+    ecu: "Kombiinstrument (IC)"

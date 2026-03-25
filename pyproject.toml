@@ -13,6 +13,8 @@ dependencies = [
     "python-obd>=0.7",
     "PyYAML>=6.0",
     "jsonschema>=4.20",
+    "udsoncan>=2.0",
+    "can-isotp>=2.0",
 ]
 
 [project.scripts]

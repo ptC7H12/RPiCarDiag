@@ -19,6 +19,33 @@ properties:
         type: integer
       description:
         type: string
+      manufacturer:
+        type: string          # e.g. "mercedes", "vw", "bmw"
+      platform:
+        type: string          # e.g. "W447", "MQB", "B48"
+
+  can_topology:
+    type: object
+    description: "CAN bus topology for vehicles with multiple CAN networks"
+    additionalProperties: false
+    properties:
+      gateway:
+        type: string          # ECU name acting as central gateway
+      buses:
+        type: array
+        items:
+          type: object
+          required: [name, bitrate]
+          additionalProperties: false
+          properties:
+            name:
+              type: string    # e.g. "CAN_C", "CAN_B", "CAN_D"
+            bitrate:
+              type: integer   # e.g. 500000, 250000
+            description:
+              type: string
+      obd_port_bus:
+        type: string          # which CAN bus the OBD port connects to
 
   ecus:
     type: array
@@ -30,9 +57,37 @@ properties:
         name:
           type: string
         address:
-          type: string  # hex, e.g. "0x7E0"
+          type: string        # hex UDS address, e.g. "0x7E0"
         response_address:
-          type: string  # hex, e.g. "0x7E8"
+          type: string        # hex UDS response address, e.g. "0x7E8"
+        tx_id:
+          type: string        # CAN arbitration ID for requests (hex)
+        rx_id:
+          type: string        # CAN arbitration ID for responses (hex)
+        can_bus:
+          type: string        # which CAN bus, e.g. "CAN_C", "CAN_B"
+        protocol:
+          type: string
+          enum: [uds, kwp2000, obd2]
+        cbf_file:
+          type: string        # Mercedes CBF file reference, e.g. "IC447KIG1"
+        description:
+          type: string
+        security_access:
+          type: object
+          additionalProperties: false
+          properties:
+            coding_level:
+              type: integer   # Security Access level for variant coding (e.g. 0x0B)
+            coding_level_response:
+              type: integer   # Response level (e.g. 0x0C)
+            standard_level:
+              type: integer   # Standard login level (e.g. 0x01)
+            seed_key_method:
+              type: string
+              enum: [mbseedkey, static, none]
+            seed_key_dll:
+              type: string    # Path or name of seed-key DLL/algorithm
 
   signals:
     type: array
@@ -49,6 +104,8 @@ properties:
           type: string
         description:
           type: string
+        can_bus:
+          type: string          # which CAN bus carries this signal
         start_bit:
           type: integer
         length:
@@ -73,7 +130,7 @@ properties:
     type: array
     items:
       type: object
-      required: [id, name, ecu, address]
+      required: [id, name, ecu]
       additionalProperties: false
       properties:
         id:
@@ -82,11 +139,38 @@ properties:
           type: string
         ecu:
           type: string
-        address:
-          type: string
-        bit:
-          type: integer
         description:
           type: string
+        coding_group:
+          type: string        # VCD group, e.g. "VCD_Parameter_Tagfahrlicht"
+
+        # Simple bit-level coding (e.g. VW)
+        address:
+          type: string        # hex address within ECU coding space
+        bit:
+          type: integer
         values:
-          type: object
+          type: object        # key-value map: bit_value -> description
+
+        # UDS DID-based coding (e.g. Mercedes)
+        did:
+          type: string        # UDS Data Identifier (hex), e.g. "0x0108"
+        byte_offset:
+          type: integer       # byte position within DID payload
+        bit_offset:
+          type: integer       # bit position within the byte
+        bit_mask:
+          type: string        # hex bitmask, e.g. "0x02"
+        bit_length:
+          type: integer       # number of bits for multi-bit values
+        data_type:
+          type: string
+          enum: [bit, byte, integer, enum]
+        security_level:
+          type: integer       # required Security Access level (e.g. 0x0B)
+        session_type:
+          type: integer       # UDS session: 0x01=default, 0x03=extended
+        requires_reset:
+          type: boolean       # ECU reset required after write?
+        notes:
+          type: string        # implementation notes / warnings
