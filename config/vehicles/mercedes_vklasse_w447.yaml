@@ -238,6 +238,307 @@ signals:
     min: -48
     max: 142
 
+  # ========================================================================
+  # UDS-DID-basierte Signale (Service 0x22, ECU 0x7E0 / Motorsteuergerät)
+  # Verifiziert für OM651 (Sprinter 2014+ / W447), Quelle: ScanGauge XGauge
+  # Alle Temperaturwerte in Zehntel-Kelvin: (raw - 2731) / 10 = factor 0.1, offset -273.1
+  # Alle Druckwerte: raw * 29/20 = factor 1.45
+  # ========================================================================
+
+  # --- DPF (Dieselpartikelfilter) ---
+
+  - id: "dpf_fuellstand"
+    name: "DPF Füllstand"
+    category: "DPF"
+    description: "DPF-Beladung in Prozent. 100% = Regen-Trigger, >200% = Limp-Mode."
+    source: "uds_did"
+    did: "0x0444"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.142857
+    offset: 0
+    unit: "%"
+    min: 0
+    max: 300
+    formula_note: "raw / 7 = Prozent"
+
+  - id: "dpf_russmasse"
+    name: "DPF Rußmasse"
+    category: "DPF"
+    description: "Geschätzte Rußmasse im DPF."
+    source: "uds_did"
+    did: "0x0444"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1
+    offset: 0
+    unit: "g"
+    min: 0
+    max: 2100
+    formula_note: "raw = Gramm (gleicher DID wie Füllstand, anderer Multiplikator)"
+
+  - id: "dpf_differenzdruck"
+    name: "DPF Differenzdruck"
+    category: "DPF"
+    description: "Druckdifferenz über dem DPF — indirekte Rußlast-Berechnung."
+    source: "uds_did"
+    did: "0x8018"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1.45
+    offset: 0
+    unit: "PSI"
+    min: 0
+    max: 100
+    formula_note: "raw * 29 / 20"
+
+  - id: "abgasgegendruck"
+    name: "Abgasgegendruck"
+    category: "DPF"
+    description: "Gesamtgegendruck der Auspuffanlage."
+    source: "uds_did"
+    did: "0x8000"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1.45
+    offset: 0
+    unit: "PSI"
+    min: 0
+    max: 100
+    formula_note: "raw * 29 / 20"
+
+  - id: "regen_zaehler"
+    name: "Regenerations-Zähler"
+    category: "DPF"
+    description: "Gesamtzahl durchgeführter DPF-Regenerationen."
+    source: "uds_did"
+    did: "0x2529"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1
+    offset: 0
+    unit: ""
+    min: 0
+    max: 65535
+
+  # --- Abgastemperaturen ---
+
+  - id: "agt_vor_dpf"
+    name: "AGT vor DPF (B19/11)"
+    category: "Abgastemperatur"
+    description: "Abgastemperatur vor dem Partikelfilter. >550°C = Regeneration aktiv."
+    source: "uds_did"
+    did: "0x8020"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 900
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  - id: "agt_vor_kat"
+    name: "AGT vor Katalysator (B19/9)"
+    category: "Abgastemperatur"
+    description: "Abgastemperatur vor dem Katalysator."
+    source: "uds_did"
+    did: "0x2961"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 900
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  - id: "agt_vor_scr"
+    name: "AGT vor SCR-Kat"
+    category: "Abgastemperatur"
+    description: "Abgastemperatur vor dem SCR-Katalysator (nur bei AdBlue-Varianten)."
+    source: "uds_did"
+    did: "0x2984"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 900
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  - id: "agt_vor_turbo"
+    name: "AGT vor Turbolader"
+    category: "Abgastemperatur"
+    description: "Abgastemperatur nach Motor, vor Turbolader."
+    source: "uds_did"
+    did: "0x8E2C"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 900
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  # --- Motor (UDS DIDs für Kontext/Korrelation) ---
+
+  - id: "ladedruck"
+    name: "Ladedruck"
+    category: "Motor"
+    description: "Turbo-Ladedruck."
+    source: "uds_did"
+    did: "0x8010"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1.45
+    offset: 0
+    unit: "PSI"
+    min: 0
+    max: 50
+    formula_note: "raw * 29 / 20"
+
+  - id: "ladelufttemperatur"
+    name: "Ladelufttemperatur"
+    category: "Motor"
+    description: "Temperatur der Ladeluft nach Ladeluftkühler."
+    source: "uds_did"
+    did: "0x8030"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 150
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  - id: "motoroeltemperatur"
+    name: "Motoröltemperatur"
+    category: "Motor"
+    description: "Motoröltemperatur."
+    source: "uds_did"
+    did: "0x8032"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 200
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  - id: "kraftstofftemperatur"
+    name: "Kraftstofftemperatur"
+    category: "Motor"
+    description: "Dieselkraftstoff-Temperatur."
+    source: "uds_did"
+    did: "0x8060"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 120
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  - id: "commonrail_druck"
+    name: "Common-Rail-Druck"
+    category: "Motor"
+    description: "Kraftstoff-Einspritzdruck im Common-Rail-System."
+    source: "uds_did"
+    did: "0x8070"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.145
+    offset: 0
+    unit: "×1000 PSI"
+    min: 0
+    max: 40
+    formula_note: "raw * 29 / 200"
+
+  - id: "tankfuellstand"
+    name: "Tankfüllstand"
+    category: "Fahrzeug"
+    description: "Aktueller Kraftstoff-Füllstand. Regen benötigt >15L."
+    source: "uds_did"
+    did: "0x1414"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 2.65
+    offset: 0
+    unit: "Gallons"
+    min: 0
+    max: 30
+    formula_note: "raw * 53 / 20"
+
+  - id: "umgebungstemperatur_uds"
+    name: "Umgebungstemperatur"
+    category: "Fahrzeug"
+    description: "Außentemperatur (UDS)."
+    source: "uds_did"
+    did: "0x8028"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.1
+    offset: -273.1
+    unit: "°C"
+    min: -40
+    max: 60
+    formula_note: "(raw - 2731) / 10 — Zehntel-Kelvin"
+
+  - id: "atmosphaerendruck"
+    name: "Atmosphärendruck"
+    category: "Fahrzeug"
+    description: "Barometrischer Umgebungsdruck."
+    source: "uds_did"
+    did: "0xAC2E"
+    ecu: "Motorsteuergerät (CRD3)"
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1.45
+    offset: 0
+    unit: "PSI"
+    min: 10
+    max: 20
+    formula_note: "raw * 29 / 20"
+
 # ============================================================================
 # VARIANT CODING
 # ============================================================================

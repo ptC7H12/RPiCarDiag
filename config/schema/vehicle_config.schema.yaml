@@ -126,15 +126,25 @@ properties:
       additionalProperties: false
       properties:
         id:
-          type: string          # hex PID or CAN ID
+          type: string          # hex PID, CAN ID, or UDS DID
         name:
           type: string
         category:
           type: string
         description:
           type: string
+        source:
+          type: string
+          enum: [can, uds_did, obd2_pid]  # default: can
+          description: "Signal source type"
+        did:
+          type: string          # UDS DID hex, e.g. "0x0444"
+        ecu:
+          type: string          # ECU name from ecus list
         can_bus:
           type: string          # which CAN bus carries this signal
+        byte_offset:
+          type: integer         # start byte in DID response payload
         start_bit:
           type: integer
         length:
@@ -154,6 +164,8 @@ properties:
           type: number
         max:
           type: number
+        formula_note:
+          type: string          # human-readable formula description
 
   coding:
     type: array
