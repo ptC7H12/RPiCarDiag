@@ -1,0 +1,14 @@
+# Simulated DTCs for development/testing
+dtcs:
+  - code: "P0300"
+    description: "Zündaussetzer erkannt (mehrere Zylinder)"
+    status: "active"
+    ecu: "Motorsteuergerät"
+  - code: "P0171"
+    description: "Gemisch zu mager (Bank 1)"
+    status: "stored"
+    ecu: "Motorsteuergerät"
+  - code: "C0035"
+    description: "Vorderachse links: Radsensor Signalstörung"
+    status: "stored"
+    ecu: "ABS/ESP"

@@ -1,0 +1,88 @@
+# JSON Schema (YAML representation) for vehicle config files
+type: object
+required: [vehicle, signals]
+additionalProperties: false
+properties:
+  vehicle:
+    type: object
+    required: [name, protocol]
+    properties:
+      name:
+        type: string
+      protocol:
+        type: string
+        enum: [obd2, can, uds]
+      year_from:
+        type: integer
+      year_to:
+        type: integer
+      description:
+        type: string
+
+  ecus:
+    type: array
+    items:
+      type: object
+      required: [name, address]
+      properties:
+        name:
+          type: string
+        address:
+          type: string  # hex, e.g. "0x7E0"
+        response_address:
+          type: string  # hex, e.g. "0x7E8"
+
+  signals:
+    type: array
+    items:
+      type: object
+      required: [id, name, category]
+      properties:
+        id:
+          type: string          # hex PID or CAN ID
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        start_bit:
+          type: integer
+        length:
+          type: integer
+        byte_order:
+          type: string
+          enum: [big_endian, little_endian]
+        is_signed:
+          type: boolean
+        factor:
+          type: number
+        offset:
+          type: number
+        unit:
+          type: string
+        min:
+          type: number
+        max:
+          type: number
+
+  coding:
+    type: array
+    items:
+      type: object
+      required: [id, name, ecu, address]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        ecu:
+          type: string
+        address:
+          type: string
+        bit:
+          type: integer
+        description:
+          type: string
+        values:
+          type: object

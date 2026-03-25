@@ -1,0 +1,33 @@
+type: object
+required: [active_vehicle, theme, font_size, language]
+properties:
+  active_vehicle:
+    type: string
+  theme:
+    type: string
+    enum: [dark, light]
+  font_size:
+    type: string
+    enum: [S, M, L]
+  language:
+    type: string
+    enum: [de, en]
+  logging:
+    type: object
+    properties:
+      auto_log:
+        type: boolean
+      max_session_size_mb:
+        type: integer
+  adapter:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [sim, socketcan, elm327_usb, elm327_bt]
+      interface:
+        type: string
+      bitrate:
+        type: integer
+      port:
+        type: string

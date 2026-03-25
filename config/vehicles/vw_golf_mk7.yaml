@@ -1,0 +1,101 @@
+vehicle:
+  name: "VW Golf Mk7"
+  protocol: "can"
+  year_from: 2013
+  year_to: 2020
+  description: "VW Golf 7 (5G) custom CAN signals. Extend as needed."
+
+ecus:
+  - name: "Motorsteuergerät"
+    address: "0x7E0"
+    response_address: "0x7E8"
+  - name: "Getriebesteuergerät"
+    address: "0x7E1"
+    response_address: "0x7E9"
+  - name: "ABS/ESP"
+    address: "0x713"
+    response_address: "0x77D"
+  - name: "Komfortsteuergerät"
+    address: "0x714"
+    response_address: "0x77E"
+
+signals:
+  # --- Motor ---
+  - id: "0x280"
+    name: "Motordrehzahl"
+    category: "Motor"
+    description: "Motordrehzahl aus CAN-Bus"
+    start_bit: 16
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.25
+    offset: 0
+    unit: "rpm"
+    min: 0
+    max: 8000
+
+  - id: "0x288"
+    name: "Fahrpedalstellung"
+    category: "Motor"
+    description: "Fahrpedalstellung in Prozent"
+    start_bit: 8
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.392
+    offset: 0
+    unit: "%"
+    min: 0
+    max: 100
+
+  # --- Fahrwerk ---
+  - id: "0x5A0"
+    name: "Fahrzeuggeschwindigkeit"
+    category: "Fahrwerk"
+    description: "Fahrzeuggeschwindigkeit (aus ABS)"
+    start_bit: 0
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.01
+    offset: 0
+    unit: "km/h"
+    min: 0
+    max: 250
+
+  # --- Komfort ---
+  - id: "0x3C0"
+    name: "Innenraumtemperatur"
+    category: "Komfort"
+    description: "Temperatur Innenraum"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.5
+    offset: -40
+    unit: "°C"
+    min: -40
+    max: 87.5
+
+coding:
+  - id: "cornering_lights"
+    name: "Kurvenlicht"
+    ecu: "Komfortsteuergerät"
+    address: "0x0042"
+    bit: 3
+    description: "Aktiviert das dynamische Kurvenlicht"
+    values:
+      0: "deaktiviert"
+      1: "aktiviert"
+
+  - id: "daytime_running_lights"
+    name: "Tagfahrlicht"
+    ecu: "Komfortsteuergerät"
+    address: "0x0043"
+    bit: 0
+    description: "Tagfahrlicht-Modus"
+    values:
+      0: "deaktiviert"
+      1: "aktiviert"
