@@ -6,18 +6,21 @@ import sys
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RPiCarDiag")
+    parser = argparse.ArgumentParser(description="RPiCarDiag — OBD/CAN Diagnostic Tool")
+    subparsers = parser.add_subparsers(dest="command")
+
+    # Default: run the app
     parser.add_argument("--sim", action="store_true", help="Force simulation mode")
-    parser.add_argument(
-        "validate_config",
-        nargs="?",
-        metavar="validate-config",
-        help="Validate a vehicle config YAML file",
+
+    # Subcommand: validate-config
+    validate_parser = subparsers.add_parser(
+        "validate-config", help="Validate a vehicle config YAML file"
     )
-    parser.add_argument("config_path", nargs="?", help="Path to config file to validate")
+    validate_parser.add_argument("config_path", help="Path to config file to validate")
+
     args = parser.parse_args()
 
-    if args.validate_config == "validate-config" and args.config_path:
+    if args.command == "validate-config":
         _validate_config(args.config_path)
         return
 

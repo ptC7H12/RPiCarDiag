@@ -1,4 +1,5 @@
 /* RPiCarDiag — Light Workshop Theme */
+/* Touch targets: min 48x48px enforced via setMinimumSize in code */
 
 QWidget {
     background-color: #F5F5F5;
@@ -27,12 +28,32 @@ QPushButton:pressed {
     color: #FFFFFF;
 }
 
+QPushButton:disabled {
+    background-color: #EEEEEE;
+    color: #9E9E9E;
+    border-color: #E0E0E0;
+}
+
 QTableView, QListView {
     background-color: #FFFFFF;
     alternate-background-color: #F9F9F9;
     border: 1px solid #BDBDBD;
+    gridline-color: #E0E0E0;
     selection-background-color: #0077A8;
     selection-color: #FFFFFF;
+}
+
+QHeaderView::section {
+    background-color: #E0E0E0;
+    color: #555555;
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid #BDBDBD;
+}
+
+QTabWidget::pane {
+    border: 1px solid #BDBDBD;
+    background-color: #F5F5F5;
 }
 
 QTabBar::tab {
@@ -40,6 +61,7 @@ QTabBar::tab {
     color: #555555;
     padding: 10px 20px;
     min-height: 48px;
+    border: 1px solid #BDBDBD;
 }
 
 QTabBar::tab:selected {
@@ -47,3 +69,34 @@ QTabBar::tab:selected {
     color: #0077A8;
     border-bottom: 2px solid #0077A8;
 }
+
+QLineEdit, QComboBox {
+    background-color: #FFFFFF;
+    color: #1A1A1A;
+    border: 1px solid #BDBDBD;
+    border-radius: 4px;
+    padding: 8px;
+    min-height: 48px;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 30px;
+}
+
+QScrollBar:vertical {
+    background-color: #F0F0F0;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #BDBDBD;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+/* Status colours */
+.status-ok    { color: #27AE60; }
+.status-warn  { color: #E67E22; }
+.status-error { color: #C0392B; }
+.status-info  { color: #0077A8; }

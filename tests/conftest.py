@@ -1,6 +1,8 @@
 """pytest fixtures for RPiCarDiag tests."""
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 
 
@@ -11,7 +13,7 @@ def sim_mode(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def sample_vehicle_config() -> dict:
+def sample_vehicle_config() -> dict[str, Any]:
     """Return a minimal valid vehicle config dict for unit tests."""
     return {
         "vehicle": {"name": "Test Vehicle", "protocol": "obd2"},
