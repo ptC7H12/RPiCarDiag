@@ -1,5 +1,6 @@
 type: object
 required: [active_vehicle, theme, font_size, language]
+additionalProperties: false
 properties:
   active_vehicle:
     type: string
@@ -14,6 +15,7 @@ properties:
     enum: [de, en]
   logging:
     type: object
+    additionalProperties: false
     properties:
       auto_log:
         type: boolean
@@ -21,6 +23,7 @@ properties:
         type: integer
   adapter:
     type: object
+    additionalProperties: false
     properties:
       type:
         type: string

@@ -6,6 +6,7 @@ properties:
   vehicle:
     type: object
     required: [name, protocol]
+    additionalProperties: false
     properties:
       name:
         type: string
@@ -24,6 +25,7 @@ properties:
     items:
       type: object
       required: [name, address]
+      additionalProperties: false
       properties:
         name:
           type: string
@@ -37,6 +39,7 @@ properties:
     items:
       type: object
       required: [id, name, category]
+      additionalProperties: false
       properties:
         id:
           type: string          # hex PID or CAN ID
@@ -71,6 +74,7 @@ properties:
     items:
       type: object
       required: [id, name, ecu, address]
+      additionalProperties: false
       properties:
         id:
           type: string

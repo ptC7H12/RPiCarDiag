@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS dashboard_layouts (
     display_type TEXT NOT NULL,   -- gauge | bar | value
     grid_row     INTEGER NOT NULL,
     grid_col     INTEGER NOT NULL,
-    config       TEXT             -- JSON blob for display-specific settings
+    config       TEXT,            -- JSON blob for display-specific settings
+    UNIQUE(vehicle, grid_row, grid_col)
 );
 
 CREATE TABLE IF NOT EXISTS coding_log (

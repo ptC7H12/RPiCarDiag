@@ -32,6 +32,9 @@ CREATE TABLE IF NOT EXISTS dtcs (
     freeze_frame TEXT            -- JSON blob
 );
 
+CREATE INDEX IF NOT EXISTS idx_dtcs_session ON dtcs(session_id);
+CREATE INDEX IF NOT EXISTS idx_dtcs_code ON dtcs(code);
+
 CREATE TABLE IF NOT EXISTS dtc_clear_log (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     cleared_at REAL NOT NULL,

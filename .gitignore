@@ -24,6 +24,7 @@ htmlcov/
 *.db
 rpicardiag_exports/
 config/sim/*.asc
+!config/sim/sample_can_session.asc
 
 # IDE
 .vscode/
