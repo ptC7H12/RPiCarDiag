@@ -1,0 +1,4 @@
+PyQt6>=6.6
+python-can>=4.0
+python-obd>=0.7
+PyYAML>=6.0

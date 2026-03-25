@@ -1,0 +1,49 @@
+/* RPiCarDiag — Light Workshop Theme */
+
+QWidget {
+    background-color: #F5F5F5;
+    color: #1A1A1A;
+    font-family: "Roboto", "Inter", "DejaVu Sans", sans-serif;
+    font-size: 14pt;
+}
+
+QPushButton {
+    background-color: #E0E0E0;
+    color: #1A1A1A;
+    border: 1px solid #BDBDBD;
+    border-radius: 6px;
+    padding: 10px 20px;
+    min-width: 80px;
+    min-height: 48px;
+}
+
+QPushButton:hover {
+    background-color: #BDBDBD;
+    border-color: #0077A8;
+}
+
+QPushButton:pressed {
+    background-color: #0077A8;
+    color: #FFFFFF;
+}
+
+QTableView, QListView {
+    background-color: #FFFFFF;
+    alternate-background-color: #F9F9F9;
+    border: 1px solid #BDBDBD;
+    selection-background-color: #0077A8;
+    selection-color: #FFFFFF;
+}
+
+QTabBar::tab {
+    background-color: #E0E0E0;
+    color: #555555;
+    padding: 10px 20px;
+    min-height: 48px;
+}
+
+QTabBar::tab:selected {
+    background-color: #FFFFFF;
+    color: #0077A8;
+    border-bottom: 2px solid #0077A8;
+}

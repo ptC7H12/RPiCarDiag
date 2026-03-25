@@ -1,0 +1,102 @@
+/* RPiCarDiag — Dark Automotive Theme */
+/* Touch targets: min 48x48px enforced via setMinimumSize in code */
+
+QWidget {
+    background-color: #0A0A0A;
+    color: #F0F0F0;
+    font-family: "Roboto", "Inter", "DejaVu Sans", sans-serif;
+    font-size: 14pt;
+}
+
+QPushButton {
+    background-color: #1A1A1A;
+    color: #F0F0F0;
+    border: 1px solid #2A2A2A;
+    border-radius: 6px;
+    padding: 10px 20px;
+    min-width: 80px;
+    min-height: 48px;
+}
+
+QPushButton:hover {
+    background-color: #252525;
+    border-color: #00B4D8;
+}
+
+QPushButton:pressed {
+    background-color: #00B4D8;
+    color: #0A0A0A;
+}
+
+QPushButton:disabled {
+    background-color: #111111;
+    color: #444444;
+    border-color: #1A1A1A;
+}
+
+QTableView, QListView {
+    background-color: #0F0F0F;
+    alternate-background-color: #141414;
+    border: 1px solid #2A2A2A;
+    gridline-color: #1E1E1E;
+    selection-background-color: #00B4D8;
+    selection-color: #0A0A0A;
+}
+
+QHeaderView::section {
+    background-color: #1A1A1A;
+    color: #A0A0A0;
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid #2A2A2A;
+}
+
+QTabWidget::pane {
+    border: 1px solid #2A2A2A;
+    background-color: #0A0A0A;
+}
+
+QTabBar::tab {
+    background-color: #141414;
+    color: #A0A0A0;
+    padding: 10px 20px;
+    min-height: 48px;
+    border: 1px solid #2A2A2A;
+}
+
+QTabBar::tab:selected {
+    background-color: #1A1A1A;
+    color: #00B4D8;
+    border-bottom: 2px solid #00B4D8;
+}
+
+QLineEdit, QComboBox {
+    background-color: #1A1A1A;
+    color: #F0F0F0;
+    border: 1px solid #2A2A2A;
+    border-radius: 4px;
+    padding: 8px;
+    min-height: 48px;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 30px;
+}
+
+QScrollBar:vertical {
+    background-color: #0F0F0F;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #2A2A2A;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+/* Status colours */
+.status-ok    { color: #2ECC71; }
+.status-warn  { color: #F39C12; }
+.status-error { color: #E74C3C; }
+.status-info  { color: #00B4D8; }

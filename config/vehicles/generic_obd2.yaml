@@ -1,0 +1,131 @@
+vehicle:
+  name: "Generic OBD-II"
+  protocol: "obd2"
+  description: "Standard SAE J1979 OBD-II PIDs (Mode 01). Fallback for all vehicles."
+
+signals:
+  - id: "0x0C"
+    name: "Motordrehzahl"
+    category: "Motor"
+    description: "Aktuelle Motordrehzahl"
+    start_bit: 0
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.25
+    offset: 0
+    unit: "rpm"
+    min: 0
+    max: 8000
+
+  - id: "0x0D"
+    name: "Fahrzeuggeschwindigkeit"
+    category: "Fahrwerk"
+    description: "Aktuelle Fahrzeuggeschwindigkeit"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1
+    offset: 0
+    unit: "km/h"
+    min: 0
+    max: 255
+
+  - id: "0x05"
+    name: "Motorkühlmitteltemperatur"
+    category: "Motor"
+    description: "Kühlmitteltemperatur"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1
+    offset: -40
+    unit: "°C"
+    min: -40
+    max: 215
+
+  - id: "0x04"
+    name: "Motorlast"
+    category: "Motor"
+    description: "Berechnete Motorlast"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.392
+    offset: 0
+    unit: "%"
+    min: 0
+    max: 100
+
+  - id: "0x0F"
+    name: "Ansauglufttemperatur"
+    category: "Motor"
+    description: "Temperatur der Ansaugluft"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1
+    offset: -40
+    unit: "°C"
+    min: -40
+    max: 215
+
+  - id: "0x10"
+    name: "Luftmassenstrom"
+    category: "Motor"
+    description: "MAF-Sensor Luftmassenstrom"
+    start_bit: 0
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.01
+    offset: 0
+    unit: "g/s"
+    min: 0
+    max: 655.35
+
+  - id: "0x11"
+    name: "Drosselklappenstellung"
+    category: "Motor"
+    description: "Absolute Drosselklappenstellung"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.392
+    offset: 0
+    unit: "%"
+    min: 0
+    max: 100
+
+  - id: "0x42"
+    name: "Batteriespannung"
+    category: "Elektrik"
+    description: "Steuergerät-Versorgungsspannung"
+    start_bit: 0
+    length: 16
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 0.001
+    offset: 0
+    unit: "V"
+    min: 0
+    max: 65.535
+
+  - id: "0x46"
+    name: "Umgebungstemperatur"
+    category: "Komfort"
+    description: "Außentemperatur"
+    start_bit: 0
+    length: 8
+    byte_order: "big_endian"
+    is_signed: false
+    factor: 1
+    offset: -40
+    unit: "°C"
+    min: -40
+    max: 215

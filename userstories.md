@@ -1,0 +1,17 @@
+# User Stories — Übersicht
+
+| ID | Name | Zusammenfassung | Status | Step |
+|---|---|---|---|---|
+| [US-001](Userstories/US-001_can_bus_sniffer.md) | CAN Bus Sniffer | Live-Tabelle mit rohen CAN-Frames (ID, DLC, Bytes, Timestamp) zur Beobachtung des Bus-Traffics ohne dekodierte Definitionen. | offen | 1 |
+| [US-002](Userstories/US-002_can_bus_interpreter.md) | CAN Bus Interpreter | CAN-Frames werden anhand der Fahrzeug-Config in lesbare Signalwerte (Name, Wert, Einheit) dekodiert und in Kategorie-Tabs (Motor, Komfort, Sicherheit usw.) angezeigt. | offen | 1 |
+| [US-003](Userstories/US-003_vehicle_ecu_config.md) | Multi-Vehicle / ECU Config | Fahrzeugspezifische CAN-IDs, Signal-Bit-Positionen, Skalierungen und ECU-Adressen werden in separaten YAML-Dateien definiert, sodass mehrere Fahrzeuge ohne Code-Änderungen unterstützt werden. | offen | 1 |
+| [US-004](Userstories/US-004_customizable_dashboard.md) | Customizable Dashboard | Signale aus dem Interpreter können per Drag & Drop auf ein Dashboard-Raster gezogen und in verschiedenen Darstellungsformen (Gauge, Balken, Zahlenwert) angezeigt werden. | offen | 1 |
+| [US-005](Userstories/US-005_dtc_read.md) | DTC Lesen | Gespeicherte Fehlercodes werden von einem oder mehreren Steuergeräten ausgelesen und mit Code, Beschreibung und Status (aktiv/gespeichert) angezeigt. | offen | 1 |
+| [US-006](Userstories/US-006_dtc_clear.md) | DTC Löschen | Gespeicherte Fehlercodes eines ausgewählten Steuergeräts können nach expliziter Bestätigung eines Warndialogs gelöscht werden. | offen | 2 |
+| [US-007](Userstories/US-007_variant_coding.md) | Variantenkodierung | Fahrzeugspezifische ECU-Coding-Sequenzen (aus YAML) werden gesendet, um das Steuergerät-Verhalten zu ändern — mit Bestätigungsschritt und automatischem Backup des aktuellen Wertes vor dem Schreiben. | offen | 2 |
+| [US-008](Userstories/US-008_simulation_mode.md) | Simulation Mode | Die Anwendung läuft ohne Raspberry-Pi-Hardware auf einem Entwicklungsrechner mit virtuellem CAN-Bus und voraufgezeichneten Daten, damit UI und Logik ohne Fahrzeug entwickelt und getestet werden können. | offen | 1 |
+| [US-009](Userstories/US-009_session_logging.md) | Session Logging & Replay | CAN- und OBD-Daten können optional in eine SQLite-Session-Datei aufgezeichnet und später im Sniffer/Interpreter wiedergegeben werden, um intermittierende Fehler offline zu analysieren. | offen | 1 |
+| [US-010](Userstories/US-010_connection_manager.md) | Connection Manager | Ein dedizierter Screen ermöglicht die Auswahl des Adapter-Typs (MCP2515/socketcan, ELM327 USB, ELM327 Bluetooth), Konfiguration der Parameter und Anzeige des Live-Verbindungsstatus. | offen | 1 |
+| [US-011](Userstories/US-011_settings_screen.md) | Settings Screen | Ein Einstellungsscreen erlaubt die Auswahl des aktiven Fahrzeugprofils, UI-Präferenzen (Theme, Schriftgröße) und Logging-Optionen. | offen | 1 |
+| [US-012](Userstories/US-012_dark_mode.md) | Dark / Automotive Theme | Ein dunkles Hochkontrast-Theme optimiert für den Einsatz im Fahrzeug bei wechselnden Lichtverhältnissen (Tageslicht, Nacht) mit Touch-Targets von mindestens 48×48 px. | offen | 1 |
+| [US-013](Userstories/US-013_export_report.md) | Export Diagnostic Report | Ein Diagnosebericht (DTC-Liste, Signal-Snapshot, Session-Zusammenfassung) kann als PDF oder Textdatei exportiert werden, um ihn an eine Werkstatt weiterzugeben oder zu archivieren. | offen | 2 |

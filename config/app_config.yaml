@@ -1,0 +1,14 @@
+active_vehicle: "generic_obd2"
+theme: "dark"
+font_size: "M"
+language: "de"
+
+logging:
+  auto_log: false
+  max_session_size_mb: 100
+
+adapter:
+  type: "sim"       # sim | socketcan | elm327_usb | elm327_bt
+  interface: "can0"
+  bitrate: 500000
+  port: "/dev/ttyUSB0"
